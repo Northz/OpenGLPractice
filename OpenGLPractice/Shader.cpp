@@ -2,9 +2,13 @@
 #include <iostream>
 #include <fstream>
 
+static std::string LoadShader( const std::string& fileName );
+static void CheckShaderError( GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage );
+
 Shader::Shader( const std::string & fileName )
 {
 	m_program = glCreateProgram();
+	m_shaders[0] = 0;
 }
 
 void Shader::Bind()
@@ -16,7 +20,7 @@ Shader::~Shader()
 	glDeleteProgram( m_program );
 }
 
-std::string Shader::LoadShader( const std::string & fileName )
+static std::string LoadShader( const std::string & fileName )
 {
 	std::ifstream file;
 	file.open( (fileName).c_str() );
@@ -40,7 +44,7 @@ std::string Shader::LoadShader( const std::string & fileName )
 	return output;
 }
 
-void Shader::CheckShaderError( GLuint shader, GLuint flag, bool isProgram, const std::string & errorMessage )
+static void CheckShaderError( GLuint shader, GLuint flag, bool isProgram, const std::string & errorMessage )
 {
 	GLint success = 0;
 	GLchar error[1024] = { 0 };
