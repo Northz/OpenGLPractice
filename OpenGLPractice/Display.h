@@ -23,4 +23,4 @@ private:
 	bool m_isClosed;
 };
 
-#endif // DISPLAY_H
+#endif // !DISPLAY_H
