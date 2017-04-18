@@ -8,8 +8,8 @@ class Shader
 {
 public:
 	Shader( const std::string& fileName );
-	void Bind();
 	virtual ~Shader();
+	void Bind();
 private:
 	static const unsigned int NUM_SHADERS = 2;
 	Shader( const Shader& other ) {}
