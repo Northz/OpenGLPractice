@@ -2,18 +2,22 @@
 #define TEXTURE_H
 
 #include <string>
-#include "GL/glew.h"
+#include <GL/glew.h>
 
 class Texture
 {
 public:
-	Texture( const std::string& fileName );
+	Texture(const std::string& fileName);
+
+	void Bind();
+
 	virtual ~Texture();
-
-	void Bind( unsigned int unit );
+protected:
 private:
-	GLuint m_texture;
+	Texture(const Texture& texture) {}
+	void operator=(const Texture& texture) {}
 
+	GLuint m_texture;
 };
 
-#endif // !TEXTURE_H
+#endif
