@@ -1,10 +1,6 @@
+#include "Shader.h"
 #include <iostream>
 #include <fstream>
-#include "Shader.h"
-
-static std::string LoadShader( const std::string& fileName );
-static void CheckShaderError( GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage );
-static GLuint CreateShader( const std::string& text, GLenum shaderType );
 
 Shader::Shader( const std::string & fileName )
 {
@@ -18,6 +14,7 @@ Shader::Shader( const std::string & fileName )
 	}
 
 	glBindAttribLocation( m_program, 0, "position" );
+	glBindAttribLocation( m_program, 1, "texCoord" );
 
 	glLinkProgram( m_program );
 	CheckShaderError( m_program, GL_LINK_STATUS, true, "Error: Program linking failed: " );
@@ -41,7 +38,7 @@ void Shader::Bind()
 	glUseProgram( m_program );
 }
 
-static std::string LoadShader( const std::string & fileName )
+std::string Shader::LoadShader( const std::string & fileName )
 {
 	std::ifstream file;
 	file.open( (fileName).c_str() );
@@ -65,7 +62,7 @@ static std::string LoadShader( const std::string & fileName )
 	return output;
 }
 
-static void CheckShaderError( GLuint shader, GLuint flag, bool isProgram, const std::string & errorMessage )
+void Shader::CheckShaderError( GLuint shader, GLuint flag, bool isProgram, const std::string & errorMessage )
 {
 	GLint success = 0;
 	GLchar error[1024] = { 0 };
@@ -86,7 +83,7 @@ static void CheckShaderError( GLuint shader, GLuint flag, bool isProgram, const 
 	}
 }
 
-static GLuint CreateShader( const std::string & text, GLenum shaderType )
+GLuint Shader::CreateShader( const std::string & text, GLenum shaderType )
 {
 	GLuint shader = glCreateShader( shaderType );
 
