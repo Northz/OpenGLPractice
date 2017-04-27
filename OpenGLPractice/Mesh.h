@@ -1,46 +1,60 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef MESH_INCLUDED_H
+#define MESH_INCLUDED_H
 
-#include <glm\glm.hpp>
-#include <GL\glew.h>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <string>
+#include <vector>
+#include "obj_loader.h"
 
-class Vertex
+struct Vertex
 {
 public:
-	Vertex( const glm::vec3& pos, const glm::vec2& texCoord )
-		:
-		pos(pos),
-		texCoord(texCoord)
+	Vertex(const glm::vec3& pos, const glm::vec2& texCoord, const glm::vec3& normal)
 	{
+		this->pos = pos;
+		this->texCoord = texCoord;
+		this->normal = normal;
 	}
 
-	inline glm::vec3* getPos() { return &pos; }
-	inline glm::vec2* getTexCoord() { return &texCoord; }
+	glm::vec3* GetPos() { return &pos; }
+	glm::vec2* GetTexCoord() { return &texCoord; }
+	glm::vec3* GetNormal() { return &normal; }
+
 private:
 	glm::vec3 pos;
 	glm::vec2 texCoord;
+	glm::vec3 normal;
+};
+
+enum MeshBufferPositions
+{
+	POSITION_VB,
+	TEXCOORD_VB,
+	NORMAL_VB,
+	INDEX_VB
 };
 
 class Mesh
 {
 public:
-	Mesh( Vertex* vertices, unsigned int numVertices );
-	virtual ~Mesh();
+    Mesh(const std::string& fileName);
+	Mesh(Vertex* vertices, unsigned int numVertices, unsigned int* indices, unsigned int numIndices);
 
 	void Draw();
-private:
-	Mesh( const Mesh& other ) {}
-	void operator=( const Mesh& other ) {}
 
-	enum
-	{
-		POSITION_VB,
-		TEXTCOORD_VB,
-		NUM_BUFFERS
-	};
+	virtual ~Mesh();
+protected:
+private:
+	static const unsigned int NUM_BUFFERS = 4;
+	void operator=(const Mesh& mesh) {}
+	Mesh(const Mesh& mesh) {}
+
+    void InitMesh(const IndexedModel& model);
 
 	GLuint m_vertexArrayObject;
 	GLuint m_vertexArrayBuffers[NUM_BUFFERS];
-	unsigned int m_drawCount;
+	unsigned int m_numIndices;
 };
-#endif // !MESH_H
+
+#endif
